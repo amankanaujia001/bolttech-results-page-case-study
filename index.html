@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bolttech Web Prototype - Insurance Results Page</title>
+  <style>
+    :root {
+      --blue: #0758d8;
+      --blue-dark: #003b96;
+      --green: #138a4b;
+      --red: #d92d20;
+      --text: #102033;
+      --muted: #64748b;
+      --line: #d9e2ef;
+      --soft: #f6f9fc;
+      --soft-blue: #eef5ff;
+      --card: #ffffff;
+      --shadow: 0 16px 40px rgba(15, 23, 42, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: #f4f7fb;
+      color: var(--text);
+    }
+
+    .app {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 68px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 42px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue), #0a7cff);
+      color: #fff;
+      display: grid;
+      place-items: center;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 26px 80px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #101d42, #2742b2 58%, #4263ff);
+      color: white;
+      border-radius: 26px;
+      padding: 34px 40px;
+      display: grid;
+      grid-template-columns: 1.5fr 0.9fr;
+      gap: 30px;
+      align-items: center;
+      box-shadow: var(--shadow);
+      margin-bottom: 26px;
+    }
+
+    .hero h1 {
+      font-size: 40px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin: 0 0 12px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(255,255,255,0.86);
+      font-size: 16px;
+      max-width: 720px;
+      line-height: 1.55;
+    }
+
+    .quote-summary {
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .quote-summary h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: rgba(255,255,255,.75);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .summary-grid div {
+      background: rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .summary-grid small {
+      display: block;
+      color: rgba(255,255,255,.66);
+      margin-bottom: 3px;
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, .05);
+    }
+
+    .panel-header {
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .panel-header h2 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .tools {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    select, .search {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px 12px;
+      color: #334155;
+      font-weight: 650;
+    }
+
+    .carrier-list {
+      padding: 18px 24px 24px;
+    }
+
+    .carrier-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .carrier-header {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .logo.blue { background: linear-gradient(135deg, #0758d8, #0a7cff); }
+    .logo.green { background: linear-gradient(135deg, #16874a, #25b96b); }
+    .logo.purple { background: linear-gradient(135deg, #6b46c1, #8b5cf6); }
+
+    .carrier-name strong {
+      font-size: 18px;
+      display: block;
+    }
+
+    .carrier-name span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .price-from {
+      text-align: right;
+    }
+
+    .price-from small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .price-from strong {
+      font-size: 22px;
+      color: #0f172a;
+    }
+
+    .chevron {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 16px;
+    }
+
+    .plans {
+      display: none;
+      padding: 0 18px 18px;
+      background: #fbfdff;
+    }
+
+    .carrier-card.expanded .plans {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .plan-card {
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      min-height: 250px;
+    }
+
+    .plan-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .plan-title strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .plan-title span {
+      color: var(--muted);
+      font-size: 12px;
+      display: block;
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
+    .plan-price {
+      text-align: right;
+      white-space: nowrap;
+      font-weight: 900;
+      font-size: 22px;
+    }
+
+    .plan-price small {
+      display: block;
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 4px 0 14px;
+    }
+
+    .chip {
+      border: 1px solid #dce7f3;
+      background: #f8fbff;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 12px;
+      color: #334155;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .info-btn {
+      border: none;
+      background: #e6eef8;
+      color: #334155;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      line-height: 17px;
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .plan-actions {
+      margin-top: auto;
+      display: grid;
+      gap: 10px;
+    }
+
+    .row-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .link-btn {
+      border: none;
+      background: transparent;
+      color: var(--blue-dark);
+      font-weight: 850;
+      cursor: pointer;
+      padding: 0;
+      font-size: 14px;
+    }
+
+    .compare-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 14px;
+      color: #334155;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--blue);
+    }
+
+    .primary-btn, .secondary-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 850;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .primary-btn {
+      background: var(--blue);
+      color: white;
+    }
+
+    .secondary-btn {
+      background: white;
+      color: var(--blue-dark);
+      border: 1px solid #b6c6e0;
+    }
+
+    .side-panel {
+      position: sticky;
+      top: 90px;
+      padding: 20px;
+    }
+
+    .side-panel h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .side-panel p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .compare-box {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: #f8fbff;
+      margin-bottom: 14px;
+    }
+
+    .selected-list {
+      min-height: 80px;
+    }
+
+    .selected-item {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 13px;
+    }
+
+    .selected-item strong {
+      display: block;
+      color: #0f172a;
+    }
+
+    .selected-item span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.58);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal {
+      width: min(760px, 100%);
+      max-height: 88vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 26px;
+      padding: 26px;
+      box-shadow: 0 26px 70px rgba(15,23,42,.30);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .modal-head .close {
+      margin-left: auto;
+      border: none;
+      background: #f1f5f9;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .summary {
+      background: var(--soft-blue);
+      border: 1px solid #d8e7ff;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 16px 0;
+      color: #334155;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .details-box {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .details-box h4 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .coverage-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .coverage-list li {
+      display: flex;
+      gap: 8px;
+      margin: 9px 0;
+    }
+
+    .ok { color: var(--green); font-weight: 900; }
+    .no { color: var(--red); font-weight: 900; }
+
+    .key-details {
+      border-top: 1px solid var(--line);
+      margin-top: 18px;
+      padding-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .key-detail {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    .key-detail small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .compare-screen {
+      display: none;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: white;
+      margin-top: 16px;
+    }
+
+    .compare-table th, .compare-table td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .compare-table th {
+      background: #f8fafc;
+    }
+
+    .compare-table th:last-child,
+    .compare-table td:last-child {
+      border-right: none;
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .compare-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .toast {
+      display: none;
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      background: #0f172a;
+      color: white;
+      border-radius: 16px;
+      padding: 14px 16px;
+      z-index: 100;
+      max-width: 360px;
+      box-shadow: 0 18px 40px rgba(15,23,42,.25);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .toast.show { display: block; }
+
+    .confirmation {
+      display: none;
+      text-align: center;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 60px 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .success {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: var(--green);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 46px;
+      margin: 0 auto 24px;
+    }
+
+    @media (max-width: 920px) {
+      .topbar { padding: 0 18px; }
+      .hero { grid-template-columns: 1fr; padding: 28px; }
+      .main-layout { grid-template-columns: 1fr; }
+      .side-panel { position: relative; top: 0; }
+      .carrier-header { grid-template-columns: auto 1fr auto; }
+      .chevron { display: none; }
+      .price-from { grid-column: 2 / 4; text-align: left; }
+      .details-grid, .key-details, .compare-actions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand"><div class="brand-mark">b</div> bolttech</div>
+      <div class="top-actions">
+        <span>Quote ID: BT-28491</span>
+        <span>Help</span>
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="resultsPage">
+        <section class="hero">
+          <div>
+            <h1>Choose Your Insurance Plan</h1>
+            <p>Browse plans from leading insurance providers, understand what's covered, and choose with confidence.</p>
+          </div>
+          <aside class="quote-summary">
+            <h3>Your Quote</h3>
+            <div class="summary-grid">
+              <div><small>Vehicle</small><strong>2026 EV Sedan</strong></div>
+              <div><small>Location</small><strong>California</strong></div>
+              <div><small>Use</small><strong>Personal</strong></div>
+              <div><small>Financing</small><strong>Yes</strong></div>
+            </div>
+          </aside>
+        </section>
+
+        <div class="main-layout">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Available Carriers</h2>
+                <p>Expand a carrier to view available plans, compare coverage details, and choose the option that best meets your needs.</p>
+              </div>
+              <div class="tools">
+                <select id="sortSelect" onchange="sortCarriers()">
+                  <option value="default">Sort: Recommended order</option>
+                  <option value="price">Sort: Lowest starting price</option>
+                  <option value="plans">Sort: Most plans</option>
+                </select>
+                <select disabled>
+                  <option>Filter: All coverage levels</option>
+                </select>
+              </div>
+            </div>
+            <div class="carrier-list" id="carrierList"></div>
+          </section>
+
+          <aside class="panel side-panel">
+            <h3>Compare Plans</h3>
+            <p>Select exactly two plans to compare side-by-side.</p>
+            <div class="compare-box">
+              <div class="selected-list" id="selectedList">
+                <div class="muted">No plans selected yet.</div>
+              </div>
+            </div>
+            <button id="compareBtn" class="primary-btn" style="width:100%" disabled onclick="openCompare()">Compare Plans</button>
+            <button class="secondary-btn" style="width:100%; margin-top:10px;" onclick="clearCompare()">Clear Selection</button>
+          </aside>
+        </div>
+      </div>
+
+      <section id="comparePage" class="panel compare-screen">
+        <div class="panel-header">
+          <div>
+            <h2>Compare Plans</h2>
+            <p>Review key differences side-by-side before choosing a plan.</p>
+          </div>
+          <button class="secondary-btn" onclick="backToResults()">Back to Results</button>
+        </div>
+        <div style="padding:24px;">
+          <div id="compareTableWrapper"></div>
+          <div id="compareActions" class="compare-actions"></div>
+        </div>
+      </section>
+
+      <section id="confirmationPage" class="confirmation">
+        <div class="success">✓</div>
+        <h1>Plan Selected</h1>
+        <p>You selected:</p>
+        <h2 id="confirmedPlan">Star Insurance - Standard Plan</h2>
+        <h1 id="confirmedPrice" style="color:var(--blue);">$42/mo</h1>
+        <p class="muted">This confirms the prototype interaction. In production, the customer would proceed to buy and checkout.</p>
+        <button class="primary-btn" onclick="resetApp()">Back to Results</button>
+      </section>
+    </div>
+
+    <div id="coverageModal" class="modal-backdrop">
+      <div class="modal">
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script>
+    const definitions = {
+      "Collision Coverage": "Covers repair costs if your vehicle is damaged in an accident, subject to policy limits.",
+      "Theft Protection": "Covers loss if your vehicle is stolen, subject to claim approval and policy conditions.",
+      "Roadside Assistance": "Provides support for towing, flat tire, or breakdown assistance.",
+      "Liability Coverage": "Covers damage or injury caused to another person or vehicle, up to policy limits.",
+      "Rental Car Coverage": "Helps cover a temporary rental car while your vehicle is being repaired after an approved claim.",
+      "Windshield Repair": "Covers repair or replacement of damaged windshield glass, subject to plan terms."
+    };
+
+    let carriers = [
+      {
+        id: "star",
+        name: "Star Insurance",
+        color: "blue",
+        startPrice: 42,
+        expanded: false,
+        plans: [
+          {
+            id: "star-standard",
+            carrier: "Star Insurance",
+            name: "Standard Plan",
+            price: 42,
+            desc: "Balanced coverage for most drivers",
+            tier: "Standard",
+            highlights: ["Collision Coverage", "Theft Protection"],
+            covered: ["Collision Coverage", "Theft Protection", "Roadside Assistance", "Liability Coverage"],
+            notCovered: ["Rental Car Coverage", "Windshield Repair"],
+            deductible: "$500",
+            limit: "Vehicle Market Value",
+            summary: "A balanced plan that covers vehicle damage, theft, roadside support, and required liability coverage."
+          }
+        ]
+      },
+      {
+        id: "jubilee",
+        name: "Jubilee Insurance",
+        color: "green",
+        startPrice: 31,
+        expanded: false,
+        plans: [
+          {
+            id: "jubilee-basic",
+            carrier: "Jubilee Insurance",
+            name: "Basic Plan",
+            price: 31,
+            desc: "Essential protection at a lower price",
+            tier: "Basic",
+            highlights: ["Liability Coverage", "Theft Protection"],
+            covered: ["Liability Coverage", "Theft Protection"],
+            notCovered: ["Collision Coverage", "Rental Car Coverage", "Windshield Repair"],
+            deductible: "$1,000",
+            limit: "State Minimum",
+            summary: "A lower-cost plan focused on essential legal protection and basic theft coverage."
+          },
+          {
+            id: "jubilee-standard",
+            carrier: "Jubilee Insurance",
+            name: "Standard Plan",
+            price: 39,
+            desc: "Everyday protection with core benefits",
+            tier: "Standard",
+            highlights: ["Collision Coverage", "Roadside Assistance"],
+            covered: ["Collision Coverage", "Theft Protection", "Roadside Assistance", "Liability Coverage"],
+            notCovered: ["Rental Car Coverage", "Windshield Repair"],
+            deductible: "$750",
+            limit: "Vehicle Market Value",
+            summary: "A practical plan for daily drivers with collision, theft, liability, and roadside support."
+          }
+        ]
+      },
+      {
+        id: "vista",
+        name: "Vista Insurance",
+        color: "purple",
+        startPrice: 27,
+        expanded: false,
+        plans: [
+          {
+            id: "vista-mini",
+            carrier: "Vista Insurance",
+            name: "Mini Cover",
+            price: 27,
+            desc: "Minimum protection at the lowest price",
+            tier: "Basic",
+            highlights: ["Liability Coverage"],
+            covered: ["Liability Coverage"],
+            notCovered: ["Collision Coverage", "Theft Protection", "Roadside Assistance", "Rental Car Coverage", "Windshield Repair"],
+            deductible: "$1,200",
+            limit: "State Minimum",
+            summary: "A minimum protection plan for customers who want the lowest monthly premium."
+          },
+          {
+            id: "vista-standard",
+            carrier: "Vista Insurance",
+            name: "Standard Plan",
+            price: 37,
+            desc: "Core protection for daily use",
+            tier: "Standard",
+            highlights: ["Theft Protection", "Roadside Assistance"],
+            covered: ["Theft Protection", "Roadside Assistance", "Liability Coverage"],
+            notCovered: ["Collision Coverage", "Rental Car Coverage", "Windshield Repair"],
+            deductible: "$850",
+            limit: "Vehicle Market Value",
+            summary: "A mid-range plan with theft, roadside support, and liability coverage."
+          },
+          {
+            id: "vista-premium",
+            carrier: "Vista Insurance",
+            name: "Premium Plan",
+            price: 56,
+            desc: "Higher protection with additional benefits",
+            tier: "Comprehensive",
+            highlights: ["Collision Coverage", "Rental Car Coverage"],
+            covered: ["Collision Coverage", "Theft Protection", "Roadside Assistance", "Rental Car Coverage", "Windshield Repair", "Liability Coverage"],
+            notCovered: ["Personal Belongings", "Mechanical Breakdown"],
+            deductible: "$400",
+            limit: "Vehicle Market Value",
+            summary: "A broader coverage plan with more benefits and lower out-of-pocket cost during claims."
+          }
+        ]
+      }
+    ];
+
+    const originalOrder = JSON.stringify(carriers);
+    let selectedPlans = [];
+
+    function getLogoText(name) {
+      return name.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
+    }
+
+    function allPlans() {
+      return carriers.flatMap(c => c.plans);
+    }
+
+    function renderCarriers() {
+      document.getElementById("carrierList").innerHTML = carriers.map(carrier => `
+        <div class="carrier-card ${carrier.expanded ? "expanded" : ""}">
+          <div class="carrier-header" onclick="toggleCarrier('${carrier.id}')">
+            <div class="logo ${carrier.color}">${getLogoText(carrier.name)}</div>
+            <div class="carrier-name">
+              <strong>${carrier.name}</strong>
+              <span>${carrier.plans.length} plan${carrier.plans.length > 1 ? "s" : ""} available</span>
+            </div>
+            <div class="price-from">
+              <small>Starting from</small>
+              <strong>$${carrier.startPrice}</strong>
+              <small>/month</small>
+            </div>
+            <div class="chevron">${carrier.expanded ? "⌃" : "⌄"}</div>
+          </div>
+          <div class="plans">
+            ${carrier.plans.map(plan => renderPlan(plan)).join("")}
+          </div>
+        </div>
+      `).join("");
+      renderSelected();
+    }
+
+    function renderPlan(plan) {
+      const checked = selectedPlans.some(p => p.id === plan.id) ? "checked" : "";
+      return `
+        <div class="plan-card">
+          <div class="plan-top">
+            <div class="plan-title">
+              <strong>${plan.name}</strong>
+              <span>${plan.desc}</span>
+            </div>
+            <div class="plan-price">$${plan.price}<small>/mo</small></div>
+          </div>
+
+          <div class="chips">
+            ${plan.highlights.map(h => `
+              <span class="chip">✓ ${h}
+                <button class="info-btn" onclick="showDefinition('${h}', event)">i</button>
+              </span>
+            `).join("")}
+          </div>
+
+          <div class="plan-actions">
+            <div class="row-actions">
+              <button class="link-btn" onclick="openCoverage('${plan.id}', event)">View Coverage</button>
+              <label class="compare-label" onclick="event.stopPropagation()">
+                <input type="checkbox" ${checked} onchange="toggleCompare('${plan.id}', this.checked)" />
+                Compare
+              </label>
+            </div>
+            <button class="primary-btn" onclick="confirmPlan('${plan.id}', event)">Select Plan</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleCarrier(id) {
+      carriers = carriers.map(c => c.id === id ? {...c, expanded: !c.expanded} : c);
+      renderCarriers();
+    }
+
+    function toggleCompare(planId, checked) {
+      const plan = allPlans().find(p => p.id === planId);
+      if (checked) {
+        if (selectedPlans.length >= 2) {
+          showToast("You can compare up to two plans in this prototype.");
+          renderCarriers();
+          return;
+        }
+        selectedPlans.push(plan);
+      } else {
+        selectedPlans = selectedPlans.filter(p => p.id !== planId);
+      }
+      renderSelected();
+    }
+
+    function renderSelected() {
+      const list = document.getElementById("selectedList");
+      if (!selectedPlans.length) {
+        list.innerHTML = '<div class="muted">No plans selected yet.</div>';
+      } else {
+        list.innerHTML = selectedPlans.map(p => `
+          <div class="selected-item">
+            <strong>${p.name}</strong>
+            <span>${p.carrier} · $${p.price}/mo</span>
+          </div>
+        `).join("");
+      }
+      document.getElementById("compareBtn").disabled = selectedPlans.length !== 2;
+    }
+
+    function clearCompare() {
+      selectedPlans = [];
+      renderCarriers();
+    }
+
+    function openCoverage(planId, event) {
+      if (event) event.stopPropagation();
+      const plan = allPlans().find(p => p.id === planId);
+      document.getElementById("modalContent").innerHTML = `
+        <div class="modal-head">
+          <div class="logo blue">${getLogoText(plan.carrier)}</div>
+          <div>
+            <h2 style="margin:0">${plan.name}</h2>
+            <p style="margin:3px 0 0;color:var(--muted)">${plan.carrier} · $${plan.price}/month</p>
+          </div>
+          <button class="close" onclick="closeModal()">×</button>
+        </div>
+        <div class="summary">💡 ${plan.summary}</div>
+        <div class="details-grid">
+          <div class="details-box">
+            <h4>What’s Covered</h4>
+            <ul class="coverage-list">
+              ${plan.covered.map(i => `<li><span class="ok">✓</span><span>${i} ${infoButton(i)}</span></li>`).join("")}
+            </ul>
+          </div>
+          <div class="details-box">
+            <h4>What’s Not Covered</h4>
+            <ul class="coverage-list">
+              ${plan.notCovered.map(i => `<li><span class="no">×</span><span>${i} ${infoButton(i)}</span></li>`).join("")}
+            </ul>
+          </div>
+        </div>
+        <div class="key-details">
+          <div class="key-detail"><small>Coverage Limit</small><strong>${plan.limit}</strong></div>
+          <div class="key-detail"><small>Deductible</small><strong>${plan.deductible}</strong></div>
+          <div class="key-detail"><small>Coverage Tier</small><strong>${plan.tier}</strong></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:18px;">
+          <button class="secondary-btn">View full policy document ↗</button>
+          <button class="primary-btn" onclick="confirmPlan('${plan.id}')">Select Plan</button>
+        </div>
+      `;
+      document.getElementById("coverageModal").classList.add("show");
+    }
+
+    function infoButton(label) {
+      return definitions[label] ? `<button class="info-btn" onclick="showDefinition('${label}', event)">i</button>` : "";
+    }
+
+    function closeModal() {
+      document.getElementById("coverageModal").classList.remove("show");
+    }
+
+    document.getElementById("coverageModal").addEventListener("click", e => {
+      if (e.target.id === "coverageModal") closeModal();
+    });
+
+    function showDefinition(term, event) {
+      event.stopPropagation();
+      showToast(definitions[term] || "Coverage details depend on carrier and plan terms.");
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3800);
+    }
+
+    function openCompare() {
+      document.getElementById("resultsPage").style.display = "none";
+      document.getElementById("comparePage").style.display = "block";
+      document.getElementById("confirmationPage").style.display = "none";
+      renderCompare();
+      window.scrollTo(0,0);
+    }
+
+    function backToResults() {
+      document.getElementById("resultsPage").style.display = "block";
+      document.getElementById("comparePage").style.display = "none";
+      document.getElementById("confirmationPage").style.display = "none";
+      window.scrollTo(0,0);
+    }
+
+    function yesNo(plan, item) {
+      return plan.covered.includes(item) ? '<span class="ok">✓ Included</span>' : '<span class="no">× Not included</span>';
+    }
+
+    function renderCompare() {
+      const [a, b] = selectedPlans;
+      const row = (label, av, bv) => `<tr><td><strong>${label}</strong></td><td>${av}</td><td>${bv}</td></tr>`;
+      document.getElementById("compareTableWrapper").innerHTML = `
+        <table class="compare-table">
+          <tr>
+            <th></th>
+            <th>${a.carrier}<br><small>${a.name}</small></th>
+            <th>${b.carrier}<br><small>${b.name}</small></th>
+          </tr>
+          ${row("Monthly Price", `<strong style="color:var(--blue)">$${a.price}/mo</strong>`, `<strong style="color:var(--blue)">$${b.price}/mo</strong>`)}
+          ${row("Coverage Tier", a.tier, b.tier)}
+          ${row("Coverage Limit", a.limit, b.limit)}
+          ${row("Collision Coverage", yesNo(a, "Collision Coverage"), yesNo(b, "Collision Coverage"))}
+          ${row("Theft Protection", yesNo(a, "Theft Protection"), yesNo(b, "Theft Protection"))}
+          ${row("Roadside Assistance", yesNo(a, "Roadside Assistance"), yesNo(b, "Roadside Assistance"))}
+          ${row("Rental Car Coverage", yesNo(a, "Rental Car Coverage"), yesNo(b, "Rental Car Coverage"))}
+          ${row("Details", `<button class="link-btn" onclick="openCoverage('${a.id}', event)">View Coverage</button>`, `<button class="link-btn" onclick="openCoverage('${b.id}', event)">View Coverage</button>`)}
+        </table>
+      `;
+      document.getElementById("compareActions").innerHTML = `
+        <button class="primary-btn" onclick="confirmPlan('${a.id}')">Select ${a.name}</button>
+        <button class="primary-btn" onclick="confirmPlan('${b.id}')">Select ${b.name}</button>
+      `;
+    }
+
+    function confirmPlan(planId, event) {
+      if (event) event.stopPropagation();
+      closeModal();
+      const plan = allPlans().find(p => p.id === planId);
+      document.getElementById("resultsPage").style.display = "none";
+      document.getElementById("comparePage").style.display = "none";
+      document.getElementById("confirmationPage").style.display = "block";
+      document.getElementById("confirmedPlan").textContent = `${plan.carrier} - ${plan.name}`;
+      document.getElementById("confirmedPrice").textContent = `$${plan.price}/mo`;
+      window.scrollTo(0,0);
+    }
+
+    function resetApp() {
+      selectedPlans = [];
+      carriers = JSON.parse(originalOrder);
+      document.getElementById("confirmationPage").style.display = "none";
+      document.getElementById("comparePage").style.display = "none";
+      document.getElementById("resultsPage").style.display = "block";
+      renderCarriers();
+      window.scrollTo(0,0);
+    }
+
+    function sortCarriers() {
+      const sort = document.getElementById("sortSelect").value;
+      if (sort === "price") {
+        carriers.sort((a, b) => a.startPrice - b.startPrice);
+      } else if (sort === "plans") {
+        carriers.sort((a, b) => b.plans.length - a.plans.length);
+      } else {
+        carriers = JSON.parse(originalOrder);
+      }
+      renderCarriers();
+    }
+
+    renderCarriers();
+  </script>
+</body>
+</html>
