@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bolttech Results Page Prototype</title>
+  <style>
+    :root {
+      --blue: #0758d8;
+      --blue-dark: #003b96;
+      --green: #138a4b;
+      --red: #d92d20;
+      --text: #102033;
+      --muted: #64748b;
+      --line: #d9e2ef;
+      --soft: #f6f9fc;
+      --soft-blue: #eef5ff;
+      --card: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+      color: var(--text);
+    }
+
+    .phone {
+      max-width: 430px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: #fff;
+      position: relative;
+      box-shadow: 0 0 30px rgba(15, 23, 42, 0.12);
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 18px 18px 12px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      background: rgba(255,255,255,0.96);
+      border-bottom: 1px solid #edf2f7;
+      backdrop-filter: blur(10px);
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .icon-btn {
+      border: none;
+      background: transparent;
+      width: 34px;
+      height: 34px;
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 4px 0 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+      margin: 0 auto;
+      max-width: 310px;
+    }
+
+    .content {
+      padding: 12px 18px 30px;
+    }
+
+    .content.has-sticky {
+      padding-bottom: 100px;
+    }
+
+    .info-strip {
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 13px;
+      color: #334155;
+      margin-bottom: 14px;
+    }
+
+    .carrier-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      margin: 14px 0;
+      background: var(--card);
+      overflow: hidden;
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .carrier-card.expanded {
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      border-color: #b9cce7;
+    }
+
+    .carrier-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px;
+      cursor: pointer;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .logo.blue { background: linear-gradient(135deg, #0758d8, #0a7cff); }
+    .logo.green { background: linear-gradient(135deg, #16874a, #25b96b); }
+    .logo.purple { background: linear-gradient(135deg, #6b46c1, #8b5cf6); }
+
+    .carrier-title {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .carrier-title strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .carrier-title span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .starting-price {
+      text-align: right;
+      margin-right: 2px;
+      min-width: 58px;
+    }
+
+    .starting-price small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .starting-price strong {
+      font-size: 18px;
+    }
+
+    .chevron {
+      font-size: 18px;
+      color: #334155;
+      min-width: 16px;
+      text-align: center;
+    }
+
+    .plans {
+      padding: 0 12px 14px;
+      display: none;
+    }
+
+    .carrier-card.expanded .plans { display: block; }
+
+    .plan-card {
+      border: 1px solid #e5edf6;
+      border-radius: 14px;
+      padding: 14px;
+      margin: 10px 0;
+      background: #fff;
+    }
+
+    .plan-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .plan-name {
+      font-size: 15px;
+      font-weight: 850;
+    }
+
+    .coverage-level {
+      display: inline-block;
+      margin-top: 6px;
+      color: #334155;
+      background:#f1f5f9;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .plan-desc {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
+    .price {
+      font-size: 20px;
+      font-weight: 900;
+      white-space: nowrap;
+      color: #0f172a;
+    }
+
+    .price small {
+      display: block;
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 12px 0;
+    }
+
+    .chip {
+      border: 1px solid #dce7f3;
+      background: #f8fbff;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 11px;
+      color: #334155;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mini-info {
+      border: none;
+      background: #e6eef8;
+      color: #334155;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .plan-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .link-btn {
+      color: var(--blue-dark);
+      background: none;
+      border: none;
+      font-weight: 850;
+      cursor: pointer;
+      padding: 0;
+      font-size: 13px;
+    }
+
+    .compare-label {
+      font-size: 13px;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--blue);
+    }
+
+    .select-plan-btn {
+      width: 100%;
+      margin-top: 12px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      padding: 12px 16px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .sticky-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(430px, 100vw);
+      background: rgba(255,255,255,0.98);
+      border-top: 1px solid var(--line);
+      padding: 12px 18px 18px;
+      z-index: 5;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .sticky-bar.show {
+      display: grid;
+    }
+
+    .sticky-copy strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.1;
+    }
+
+    .sticky-copy span {
+      color: var(--muted);
+      font-size: 12px;
+      display: block;
+      margin-top: 3px;
+    }
+
+    .primary-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      padding: 12px 16px;
+      font-weight: 850;
+      cursor: pointer;
+      min-width: 128px;
+      white-space: nowrap;
+    }
+
+    .secondary-btn {
+      background: #fff;
+      color: var(--blue-dark);
+      border: 1px solid #9bb4d7;
+      border-radius: 11px;
+      padding: 12px 18px;
+      font-weight: 850;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .drawer-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.58);
+      z-index: 20;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .drawer-backdrop.show { display: flex; }
+
+    .drawer {
+      width: min(430px, 100vw);
+      max-height: 86vh;
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      padding: 12px 18px 24px;
+      overflow-y: auto;
+      animation: slideUp .22s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .handle {
+      width: 46px;
+      height: 5px;
+      background: #cbd5e1;
+      border-radius: 99px;
+      margin: 0 auto 14px;
+    }
+
+    .drawer-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .drawer-head .close {
+      margin-left: auto;
+      border: none;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .summary-box {
+      background: var(--soft-blue);
+      border: 1px solid #d8e7ff;
+      border-radius: 13px;
+      padding: 13px;
+      margin: 12px 0 18px;
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .quick-value {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+
+    .quick-value strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .quick-value div {
+      margin: 5px 0;
+      color: #334155;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 900;
+      margin: 16px 0 8px;
+    }
+
+    .coverage-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .coverage-list li {
+      margin: 9px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .ok { color: var(--green); font-weight: 900; }
+    .no { color: var(--red); font-weight: 900; }
+
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #eef2f7;
+      padding: 10px 0;
+      font-size: 13px;
+      gap: 20px;
+    }
+
+    .details-row span:first-child { color: #475569; }
+    .details-row strong { text-align: right; }
+
+    .tooltip {
+      display: none;
+      position: fixed;
+      left: 50%;
+      bottom: 94px;
+      transform: translateX(-50%);
+      width: min(390px, calc(100vw - 36px));
+      background: #0f172a;
+      color: white;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.45;
+      z-index: 30;
+      box-shadow: 0 12px 28px rgba(15,23,42,.28);
+    }
+
+    .tooltip.show { display: block; }
+
+    .screen { display: none; min-height: 100vh; background: #fff; }
+    .screen.active { display: block; }
+
+    .compare-content { padding: 18px 14px 120px; }
+
+    .compare-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      font-size: 12px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 10px 8px;
+      vertical-align: middle;
+      background: #fff;
+    }
+
+    th:last-child, td:last-child { border-right: none; }
+    tr:last-child td { border-bottom: none; }
+
+    th { text-align: center; background: #fbfdff; }
+    td:first-child {
+      color: #334155;
+      font-weight: 850;
+      width: 34%;
+      background: #fbfdff;
+    }
+
+    .selected-screen {
+      display: none;
+      min-height: 100vh;
+      padding: 100px 30px 30px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .selected-screen.active { display: block; }
+
+    .success {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 52px;
+      margin: 0 auto 24px;
+    }
+
+    .prototype-note {
+      max-width: 430px;
+      margin: 20px auto;
+      padding: 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #334155;
+    }
+
+    @media (min-width: 900px) {
+      body {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 30px;
+        padding: 30px;
+      }
+      .phone {
+        border-radius: 28px;
+        min-height: 850px;
+      }
+      .sticky-bar, .drawer-backdrop {
+        position: absolute;
+      }
+      .sticky-bar {
+        border-radius: 0 0 28px 28px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .sticky-bar {
+        grid-template-columns: 1fr;
+      }
+      .primary-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <section id="resultsScreen" class="screen active">
+      <header>
+        <div class="top-row">
+          <button class="icon-btn" aria-label="Back">‹</button>
+          <button class="icon-btn" aria-label="Menu">≡</button>
+        </div>
+        <h1>Choose Your Plan</h1>
+        <p class="subtitle">Browse plans from leading insurance providers, understand what's covered, and choose with confidence.</p>
+      </header>
+
+      <div id="contentArea" class="content">
+        <div class="info-strip">🛡️ <span>These plans were generated based on your vehicle details, location, and driver information.</span></div>
+        <div class="info-strip">ℹ️ <span>Expand a carrier to view available plans, compare coverage details, and choose the option that best meets your needs.</span></div>
+        <div id="carrierList"></div>
+      </div>
+
+      <div id="stickyBar" class="sticky-bar">
+        <div class="sticky-copy">
+          <strong id="selectedCount">2 plans selected</strong>
+          <span>Ready to compare side-by-side</span>
+        </div>
+        <button id="compareBtn" class="primary-btn">Compare Plans</button>
+      </div>
+    </section>
+
+    <section id="compareScreen" class="screen">
+      <header>
+        <div class="top-row">
+          <button class="icon-btn" onclick="showResults()">‹</button>
+          <span></span>
+        </div>
+        <h1>Compare Plans</h1>
+        <p class="subtitle">Review key differences side-by-side before choosing.</p>
+      </header>
+
+      <div class="compare-content">
+        <div class="compare-pill">
+          <strong>2 plans selected</strong>
+          <button class="link-btn" onclick="showResults()">Edit</button>
+        </div>
+        <div id="compareTable"></div>
+        <div id="compareActions" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+        </div>
+        <button class="secondary-btn" onclick="showResults()">Back to Results</button>
+      </div>
+    </section>
+
+    <section id="selectedScreen" class="selected-screen">
+      <div class="success">✓</div>
+      <h1>Plan Selected</h1>
+      <p>You selected:</p>
+      <h2 id="confirmedPlan">Star Insurance<br/>Standard Plan</h2>
+      <h1 id="confirmedPrice" style="color:var(--blue);">$42/mo</h1>
+      <p class="subtitle">This confirms the prototype interaction. In production, the customer would proceed to buy and checkout.</p>
+      <button class="primary-btn" style="width:100%; margin-top:26px;" onclick="resetPrototype()">Back to Prototype</button>
+    </section>
+
+    <div id="drawerBackdrop" class="drawer-backdrop">
+      <div class="drawer" role="dialog" aria-modal="true" aria-label="Coverage detail drawer">
+        <div class="handle"></div>
+        <div id="drawerContent"></div>
+      </div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+  </main>
+
+  <aside class="prototype-note">
+    <strong>Prototype note:</strong> This MVP supports three paths: direct plan selection, view coverage then select, and compare two plans before selection. Recommendation labels such as “Best Cover” are intentionally excluded because ranking logic is out of scope for this sprint.
+  </aside>
+
+  <script>
+    const definitions = {
+      "Collision Coverage": "Covers repair costs if your vehicle is damaged in an accident, subject to policy limits.",
+      "Theft Protection": "Covers loss if your vehicle is stolen, subject to claim approval and policy conditions.",
+      "Roadside Assistance": "Provides help for breakdowns such as towing, flat tire support, or jump-start assistance.",
+      "Liability Coverage": "Covers damage or injury caused to another person or vehicle, up to policy limits.",
+      "Rental Car Coverage": "Helps cover a temporary rental car while your vehicle is being repaired after an approved claim.",
+      "Windshield Repair": "Covers repair or replacement of damaged windshield glass, subject to plan terms."
+    };
+
+    const carriers = [
+      {
+        id: "carrierA",
+        name: "Star Insurance",
+        color: "blue",
+        startPrice: 42,
+        expanded: false,
+        plans: [
+          {
+            id: "a-standard",
+            carrier: "Carrier A",
+            name: "Standard Plan",
+            price: 42,
+            desc: "Balanced coverage for most drivers",
+            tier: "Standard",
+            highlights: ["Collision Coverage", "Theft Protection"],
+            covered: ["Collision Coverage", "Theft Protection", "Roadside Assistance", "Liability Coverage"],
+            notCovered: ["Rental Car Coverage", "Windshield Repair"],
+            deductible: "$500",
+            limit: "Vehicle Market Value",
+            summary: "A balanced plan that covers vehicle damage, theft, roadside support, and required liability coverage."
+          }
+        ]
+      },
+      {
+        id: "carrierB",
+        name: "Jubilee Insurance",
+        color: "green",
+        startPrice: 31,
+        expanded: false,
+        plans: [
+          {
+            id: "b-basic",
+            carrier: "Carrier B",
+            name: "Basic Plan",
+            price: 31,
+            desc: "Essential protection at a lower price",
+            tier: "Basic",
+            highlights: ["Liability Coverage", "Theft Protection"],
+            covered: ["Liability Coverage", "Theft Protection"],
+            notCovered: ["Collision Coverage", "Rental Car Coverage", "Windshield Repair"],
+            deductible: "$1,000",
+            limit: "State Minimum",
+            summary: "A lower-cost plan focused on essential legal protection and basic theft coverage."
+          },
+          {
+            id: "b-standard",
+            carrier: "Carrier B",
+            name: "Standard Plan",
+            price: 39,
+            desc: "Everyday protection with core benefits",
+            tier: "Standard",
+            highlights: ["Collision Coverage", "Roadside Assistance"],
+            covered: ["Collision Coverage", "Theft Protection", "Roadside Assistance", "Liability Coverage"],
+            notCovered: ["Rental Car Coverage", "Windshield Repair"],
+            deductible: "$750",
+            limit: "Vehicle Market Value",
+            summary: "A practical plan for daily drivers with collision, theft, liability, and roadside support."
+          }
+        ]
+      },
+      {
+        id: "carrierC",
+        name: "Vista Insurance",
+        color: "purple",
+        startPrice: 27,
+        expanded: false,
+        plans: [
+          {
+            id: "c-mini",
+            carrier: "Carrier C",
+            name: "Mini Cover",
+            price: 27,
+            desc: "Minimum protection at the lowest price",
+            tier: "Basic",
+            highlights: ["Liability Coverage"],
+            covered: ["Liability Coverage"],
+            notCovered: ["Collision Coverage", "Theft Protection", "Roadside Assistance", "Rental Car Coverage", "Windshield Repair"],
+            deductible: "$1,200",
+            limit: "State Minimum",
+            summary: "A minimum protection plan for customers who want the lowest monthly premium."
+          },
+          {
+            id: "c-standard",
+            carrier: "Carrier C",
+            name: "Standard Plan",
+            price: 37,
+            desc: "Core protection for daily use",
+            tier: "Standard",
+            highlights: ["Theft Protection", "Roadside Assistance"],
+            covered: ["Theft Protection", "Roadside Assistance", "Liability Coverage"],
+            notCovered: ["Collision Coverage", "Rental Car Coverage", "Windshield Repair"],
+            deductible: "$850",
+            limit: "Vehicle Market Value",
+            summary: "A mid-range plan with theft, roadside support, and liability coverage."
+          },
+          {
+            id: "c-premium",
+            carrier: "Carrier C",
+            name: "Premium Plan",
+            price: 56,
+            desc: "Higher protection with additional benefits",
+            tier: "Comprehensive",
+            highlights: ["Collision Coverage", "Rental Car Coverage"],
+            covered: ["Collision Coverage", "Theft Protection", "Roadside Assistance", "Rental Car Coverage", "Windshield Repair", "Liability Coverage"],
+            notCovered: ["Personal Belongings", "Mechanical Breakdown"],
+            deductible: "$400",
+            limit: "Vehicle Market Value",
+            summary: "A broader coverage plan with more benefits and lower out-of-pocket cost during claims."
+          }
+        ]
+      }
+    ];
+
+    let selectedPlans = [];
+    let tooltipTimer = null;
+
+    function getLogoText(name) {
+      return name.split(" ").map(word => word[0]).join("").slice(0, 2).toUpperCase();
+    }
+
+    function allPlans() {
+      return carriers.flatMap(c => c.plans);
+    }
+
+    function escapeText(text) {
+      return String(text).replaceAll("'", "\\'");
+    }
+
+    function renderCarriers() {
+      const list = document.getElementById("carrierList");
+      list.innerHTML = carriers.map(carrier => `
+        <div class="carrier-card ${carrier.expanded ? "expanded" : ""}">
+          <div class="carrier-header" onclick="toggleCarrier('${carrier.id}')">
+            <div class="logo ${carrier.color}">${getLogoText(carrier.name)}</div>
+            <div class="carrier-title">
+              <strong>${carrier.name}</strong>
+              <span>${carrier.plans.length} plan${carrier.plans.length > 1 ? "s" : ""} available</span>
+            </div>
+            <div class="starting-price">
+              <small>From</small>
+              <strong>$${carrier.startPrice}</strong>
+              <small>/mo</small>
+            </div>
+            <div class="chevron">${carrier.expanded ? "⌃" : "⌄"}</div>
+          </div>
+          <div class="plans">${carrier.plans.map(renderPlan).join("")}</div>
+        </div>
+      `).join("");
+      updateCompareBar();
+    }
+
+    function renderPlan(plan) {
+      const checked = selectedPlans.some(p => p.id === plan.id) ? "checked" : "";
+      const compareText = selectedPlans.some(p => p.id === plan.id) ? "Added to comparison" : "Compare";
+      return `
+        <div class="plan-card">
+          <div class="plan-top">
+            <div>
+              <div class="plan-name">${plan.name}</div>
+              <span class="coverage-level">Coverage: ${plan.tier}</span>
+              <div class="plan-desc">${plan.desc}</div>
+            </div>
+            <div class="price">$${plan.price}<small>/mo</small></div>
+          </div>
+
+          <div class="chips">
+            ${plan.highlights.map(h => `
+              <span class="chip">✓ ${h}
+                <button class="mini-info" onclick="showDefinition('${escapeText(h)}', event)" aria-label="What is ${h}?">i</button>
+              </span>
+            `).join("")}
+          </div>
+
+          <div class="plan-actions">
+            <button class="link-btn" onclick="openCoverage('${plan.id}', event)">View Coverage</button>
+            <label class="compare-label" onclick="event.stopPropagation()">
+              <input type="checkbox" ${checked} onchange="toggleCompare('${plan.id}', this.checked)" />
+              ${compareText}
+            </label>
+          </div>
+
+          <button class="select-plan-btn" onclick="confirmPlan('${plan.id}')">Select Plan</button>
+        </div>
+      `;
+    }
+
+    function toggleCarrier(id) {
+      carriers.forEach(c => {
+        if (c.id === id) c.expanded = !c.expanded;
+      });
+      renderCarriers();
+    }
+
+    function toggleCompare(planId, isChecked) {
+      const plan = allPlans().find(p => p.id === planId);
+      if (isChecked) {
+        if (selectedPlans.length >= 2) {
+          alert("You can compare up to 2 plans in this prototype.");
+          renderCarriers();
+          return;
+        }
+        selectedPlans.push(plan);
+      } else {
+        selectedPlans = selectedPlans.filter(p => p.id !== planId);
+      }
+      updateCompareBar();
+    }
+
+    function updateCompareBar() {
+      const sticky = document.getElementById("stickyBar");
+      const contentArea = document.getElementById("contentArea");
+      if (selectedPlans.length === 2) {
+        sticky.classList.add("show");
+        contentArea.classList.add("has-sticky");
+        document.getElementById("selectedCount").textContent = "2 plans selected";
+      } else {
+        sticky.classList.remove("show");
+        contentArea.classList.remove("has-sticky");
+      }
+    }
+
+    function showDefinition(term, event) {
+      event.stopPropagation();
+      const tooltip = document.getElementById("tooltip");
+      tooltip.textContent = definitions[term] || "Coverage details depend on the selected plan and carrier.";
+      tooltip.classList.add("show");
+      clearTimeout(tooltipTimer);
+      tooltipTimer = setTimeout(() => tooltip.classList.remove("show"), 3500);
+    }
+
+    function openCoverage(planId, event) {
+      if (event) event.stopPropagation();
+      const plan = allPlans().find(p => p.id === planId);
+      document.getElementById("drawerContent").innerHTML = renderDrawer(plan);
+      document.getElementById("drawerBackdrop").classList.add("show");
+    }
+
+    function closeDrawer() {
+      document.getElementById("drawerBackdrop").classList.remove("show");
+    }
+
+    function infoButton(label) {
+      if (!definitions[label]) return "";
+      return `<button class="mini-info" onclick="showDefinition('${escapeText(label)}', event)" aria-label="What is ${label}?">i</button>`;
+    }
+
+    function renderDrawer(plan) {
+      const topItems = plan.covered.slice(0, 3);
+      return `
+        <div class="drawer-head">
+          <div class="logo blue">${getLogoText(plan.carrier)}</div>
+          <div>
+            <strong>${plan.carrier}</strong><br/>
+            <span>${plan.name}</span>
+          </div>
+          <button class="close" onclick="closeDrawer()">×</button>
+        </div>
+
+        <div class="summary-box">💡 <span>${plan.summary}</span></div>
+
+        <div class="quick-value">
+          <strong>Why customers choose this plan</strong>
+          ${topItems.map(item => `<div>✓ ${item}</div>`).join("")}
+        </div>
+
+        <div class="section-title">What's Covered</div>
+        <ul class="coverage-list">
+          ${plan.covered.map(item => `<li><span class="ok">✓</span><span>${item} ${infoButton(item)}</span></li>`).join("")}
+        </ul>
+
+        <div class="section-title">What's Not Covered</div>
+        <ul class="coverage-list">
+          ${plan.notCovered.map(item => `<li><span class="no">×</span><span>${item} ${infoButton(item)}</span></li>`).join("")}
+        </ul>
+
+        <div class="section-title">Key Details</div>
+        <div class="details-row"><span>Coverage Limit</span><strong>${plan.limit}</strong></div>
+        <div class="details-row"><span>Deductible</span><strong>${plan.deductible}</strong></div>
+        <div class="details-row"><span>Coverage Tier</span><strong>${plan.tier}</strong></div>
+
+        <button class="link-btn" style="margin:14px 0;">View full policy document ↗</button>
+        <button class="primary-btn" style="width:100%;" onclick="confirmPlan('${plan.id}')">Select Plan</button>
+      `;
+    }
+
+    document.getElementById("drawerBackdrop").addEventListener("click", function(e) {
+      if (e.target.id === "drawerBackdrop") closeDrawer();
+    });
+
+    document.getElementById("compareBtn").addEventListener("click", function() {
+      if (selectedPlans.length === 2) showCompare();
+    });
+
+    function showCompare() {
+      document.getElementById("resultsScreen").classList.remove("active");
+      document.getElementById("compareScreen").classList.add("active");
+      renderCompareTable();
+      window.scrollTo(0,0);
+    }
+
+    function showResults() {
+      document.getElementById("compareScreen").classList.remove("active");
+      document.getElementById("resultsScreen").classList.add("active");
+      window.scrollTo(0,0);
+    }
+
+    function yesNo(plan, item) {
+      return plan.covered.includes(item) ? '<span class="ok">✓ Included</span>' : '<span class="no">× Not Included</span>';
+    }
+
+    function renderCompareTable() {
+      const [a,b] = selectedPlans;
+      const row = (label, av, bv) => `<tr><td>${label}</td><td>${av}</td><td>${bv}</td></tr>`;
+      document.getElementById("compareTable").innerHTML = `
+        <table>
+          <tr>
+            <th></th>
+            <th>${a.carrier}<br/><small>${a.name}</small></th>
+            <th>${b.carrier}<br/><small>${b.name}</small></th>
+          </tr>
+          ${row("Monthly Price", `<strong style="color:var(--blue)">$${a.price}/mo</strong>`, `<strong style="color:var(--green)">$${b.price}/mo</strong>`)}
+          ${row("Coverage Tier", a.tier, b.tier)}
+          ${row("Coverage Limit", a.limit, b.limit)}
+          ${row("Collision", yesNo(a, "Collision Coverage"), yesNo(b, "Collision Coverage"))}
+          ${row("Theft", yesNo(a, "Theft Protection"), yesNo(b, "Theft Protection"))}
+          ${row("Roadside", yesNo(a, "Roadside Assistance"), yesNo(b, "Roadside Assistance"))}
+          ${row("Rental Car", yesNo(a, "Rental Car Coverage"), yesNo(b, "Rental Car Coverage"))}
+          ${row("Details", `<button class="link-btn" onclick="openCoverage('${a.id}')">View</button>`, `<button class="link-btn" onclick="openCoverage('${b.id}')">View</button>`)}
+        </table>
+      `;
+
+      document.getElementById("compareActions").innerHTML = `
+        <button class="primary-btn" onclick="confirmPlan('${a.id}')">
+          Select ${a.name}
+        </button>
+        <button class="primary-btn" onclick="confirmPlan('${b.id}')">
+          Select ${b.name}
+        </button>
+      `;
+    }
+
+    function selectPlanFromCompare() {
+      confirmPlan(selectedPlans[0].id);
+    }
+
+    function confirmPlan(planId) {
+      const plan = allPlans().find(p => p.id === planId);
+      closeDrawer();
+      document.getElementById("resultsScreen").classList.remove("active");
+      document.getElementById("compareScreen").classList.remove("active");
+      document.getElementById("selectedScreen").classList.add("active");
+      document.getElementById("confirmedPlan").innerHTML = `${plan.carrier}<br/>${plan.name}`;
+      document.getElementById("confirmedPrice").textContent = `$${plan.price}/mo`;
+      window.scrollTo(0,0);
+    }
+
+    function resetPrototype() {
+      selectedPlans = [];
+      carriers.forEach(c => c.expanded = false);
+      document.getElementById("selectedScreen").classList.remove("active");
+      document.getElementById("resultsScreen").classList.add("active");
+      renderCarriers();
+    }
+
+    renderCarriers();
+  </script>
+</body>
+</html>
